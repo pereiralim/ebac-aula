@@ -1,35 +1,52 @@
 ///<reference types="cypress"/>
-import { faker } from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 
-describe("Funcionalidade de Pre-cadastro", () => {
+beforeEach(() => {
+    cy.visit('http://lojaebac.ebaconline.art.br/minha-conta/')
+})
 
-    beforeEach(() => {
-        cy.visit('http://lojaebac.ebaconline.art.br/')
-    })
+afterEach(() => {
+    cy.screenshot()
+})
 
-    afterEach(() => {
-        cy.screenshot()
-    })
+describe('Fluxo de pre-cadastro', () => {
+    //Pre-cadastro
+    const email_usu = faker.internet.email()
+    const password_usu = faker.internet.password()
 
-    context('Criando um novo cadastro de usuario', () => {
+    //Completar o pre-cadastro
+    const firtName = faker.person.firstName()
+    const lastName = faker.person.lastName()
 
-        it('Deve completar o pre-cadastro com sucesso', () => {
-            //icone de Login
-            cy.get('.icon-user-unfollow').click()
+    //Senha nova
+    const newPassword_usu = faker.internet.password()
 
-            //Preencher o pre-registro email + senha
-            cy.get('#reg_email').type(faker.internet.email())
-            cy.get('#reg_password').type(faker.internet.password())
-            cy.get(':nth-child(4) > .button').click() //button de acao
+    it('Deve realizar o pre-cadastro com sucesso', () => {
+        //pre-cadastro
+        cy.get('#reg_email').type(email_usu)
+        cy.get('#reg_password').type(password_usu)
+        cy.get(':nth-child(4) > .button').click()
 
-            //Clicar em detalhes da conta - completar o cadastro
-            cy.get('.woocommerce-MyAccount-navigation-link--edit-account > a').click()
-            cy.get('#account_first_name').type(faker.person.firstName())
-            cy.get('#account_last_name').type(faker.person.lastName())
-            cy.get('#main > div > div > form > p:nth-child(8) > button').click() //button de acao
+        //Mensagem de cadastro realizado com sucesso
+        cy.get('.woocommerce-MyAccount-content > :nth-child(2)').should('contain', 'Olá,')
 
-            //Mensagem de confirmacao da criacao + modificacao da conta com sucesso
-            cy.get('.woocommerce-message').should('contain', 'Detalhes da conta modificados com sucesso.')
-        })
+
+        //Completar o pre-cadastro com sucesso
+        cy.get('.woocommerce-MyAccount-navigation-link--edit-account > a').click()
+
+        cy.get('.form-row-first > label').type(firtName)
+        cy.get('#account_last_name').type(lastName)
+
+        //Trocar a senha atual por uma nova senha
+        cy.get('#password_current').type(password_usu)
+
+        //Nova senha
+        cy.get('#password_1').type(newPassword_usu)
+        cy.get('#password_2').type(newPassword_usu)
+
+        cy.get('.woocommerce-Button').click()
+
+        //Validando a mensagem de modificacao realizada com sucesso
+        cy.get('.woocommerce-message').should('contain', 'modificados com sucesso')
     })
 })
