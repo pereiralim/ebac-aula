@@ -1,5 +1,5 @@
 ///<reference types="cypress"/>
-import {faker} from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 beforeEach(() => {
     cy.visit('http://lojaebac.ebaconline.art.br/minha-conta/')
@@ -10,18 +10,19 @@ afterEach(() => {
 })
 
 describe('Fluxo de pre-cadastro', () => {
-    //Pre-cadastro
-    const email_usu = faker.internet.email()
-    const password_usu = faker.internet.password()
-
-    //Completar o pre-cadastro
-    const firtName = faker.person.firstName()
-    const lastName = faker.person.lastName()
-
-    //Senha nova
-    const newPassword_usu = faker.internet.password()
 
     it('Deve realizar o pre-cadastro com sucesso', () => {
+        //Pre-cadastro
+        var email_usu = faker.internet.email()
+        var password_usu = faker.internet.password()
+
+        //Completar o pre-cadastro
+        var firtName = faker.person.firstName()
+        var lastName = faker.person.lastName()
+
+        //Senha nova
+        var newPassword_usu = faker.internet.password()
+        
         //pre-cadastro
         cy.get('#reg_email').type(email_usu)
         cy.get('#reg_password').type(password_usu)
