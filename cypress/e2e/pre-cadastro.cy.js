@@ -1,4 +1,4 @@
-///<reference types="cypress"/>
+///<reference types="Cypress"/>
 import { faker } from '@faker-js/faker';
 
 beforeEach(() => {
